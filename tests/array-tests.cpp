@@ -2,7 +2,7 @@
 #include <vector>
 #include <random>
 #include <ctime>
-#include "../sort.hpp"
+#include "../array.hpp"
 
 int int_cmp(const int &a, const int &b)
 {
@@ -10,7 +10,6 @@ int int_cmp(const int &a, const int &b)
     {
         return (a > b) ? 1 : -1;
     }
-
     return 0;
 }
 
@@ -64,5 +63,18 @@ int main()
         assert(is_sorted<int>(randomArray, 0, randomArray.size(), int_cmp));
     }
     std::cout << "SUCCESS: All tests passed!\n";
+
+    std::cout << "Testing: partition\n";
+    for (int i = 0; i < num_tests; i++)
+    {
+        std::vector<int> randomArray = generateRandomArray(minLength, maxLength, minValue, maxValue);
+        auto pred_fn = [randomArray](const int &elem)
+        { return (elem != randomArray[0]) ? true : false; };
+        size_t k = partition<int>(randomArray, pred_fn);
+        assert(for_each<int>(randomArray, 0, k, pred_fn));
+        assert(!for_each<int>(randomArray, k, randomArray.size(), pred_fn));
+    }
+    std::cout << "SUCCESS: All tests passed!\n";
+
     return 0;
 }
